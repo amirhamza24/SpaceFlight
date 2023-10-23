@@ -6,15 +6,36 @@ export const AllData = createContext();
 const Context = ({ children }) => {
 
     const [rocketData, setRocketData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
 
     useEffect( () => {
         fetch('data.json')
         .then(res => res.json())
-        .then(data => setRocketData(data))
+        .then(data => {
+            setRocketData(data);
+            setFilterData(data);
+        })
     }, [])
 
+    const filterDataBySearch = (searchText) => {
+        const filtered = rocketData.filter((rocket) =>
+            rocket.rocket.rocket_name.toLowerCase().includes(searchText.toLowerCase())
+        );
+        setFilterData(filtered);
+    };
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const getPaginatedData = () => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return filterData.slice(startIndex, endIndex);
+    };
+
     return (
-        <AllData.Provider value={rocketData}>
+        <AllData.Provider value={{ rocketData: getPaginatedData(), filterDataBySearch, currentPage, paginate }}>
             {children}
         </AllData.Provider>
     );

@@ -1,6 +1,6 @@
 // import React from 'react';
 // import { createContext, useEffect, useState } from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { AllData } from './Context';
 import ShowData from './ShowData';
@@ -17,8 +17,21 @@ const Home = () => {
     //     .then(data => setRocketData(data))
     // }, [])
 
-    const values = useContext(AllData);
+    const [search, setSearch] = useState('');
+    const { rocketData, filterDataBySearch, currentPage, paginate } = useContext(AllData);
+    
+    // const searchText = value => {
+        // setFilter(e.target.value)
 
+        // const res = values.filter(filterData => filterData.rocket.rocket_name.toLowerCase().includes(value))
+        // setFilter(res)
+
+    // }
+
+    const searchText = (value) => {
+        setSearch(value);
+        filterDataBySearch(value);
+    };
 
     return (
         <div className="w-10/12 mx-auto my-16">
@@ -31,9 +44,9 @@ const Home = () => {
             
                 <div>
                     <div className='flex items-center relative'>
-                        <input type="text" placeholder="Search..." className='w-4/12 px-3 py-1 focus:outline-none border rounded' />
+                        <input type="text" value={search} onChange={e=> searchText(e.target.value)} placeholder="Search..." className='w-3/12 px-3 py-1 focus:outline-none border rounded-l' />
 
-                        <div className='absolute top-1 left-[335px] rounded-r bg-blue-600 w-10 h-7 flex justify-center items-center text-white'>
+                        <div className='absolute top-0 left-[280px] rounded-r bg-blue-600 w-10 h-[33px] flex justify-center items-center text-white'>
                         <FaSearch></FaSearch>
                         </div>
                     </div>
