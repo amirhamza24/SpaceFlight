@@ -40,10 +40,7 @@ const Home = () => {
                 </div>
 
                 <ShowData></ShowData>
-            {/* <AllData.Provider value={rocketData}>
-                {children}
-            </AllData.Provider> */}
-            
+
         </div>
     );
 };
