@@ -8,9 +8,10 @@ const Context = ({ children }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
     const [selectedStatus, setSelectedStatus] = useState('All');
+    const [selectedDate, setSelectedDate] = useState('All');
 
     useEffect(() => {
-        fetch('data.json')
+        fetch('https://api.spacexdata.com/v3/launches')
             .then((res) => res.json())
             .then((data) => {
                 setRocketData(data);
@@ -37,6 +38,35 @@ const Context = ({ children }) => {
         paginate(1);
     };
 
+    const filterDataByDate = (date) => {
+        setSelectedDate(date);
+        const today = new Date();
+        let cutoffDate = new Date();
+
+        if (date === 'LastWeek') {
+            cutoffDate.setDate(today.getDate() - 7);
+        } 
+        else if (date === 'LastMonth') {
+            cutoffDate.setMonth(today.getMonth() - 1);
+        } 
+        else if (date === 'LastYear') {
+            cutoffDate.setFullYear(today.getFullYear() - 1);
+        } 
+        else {
+            cutoffDate = null;
+        }
+
+        const filtered = rocketData.filter((rocket) => {
+            if (cutoffDate) {
+                const launchDate = new Date(rocket.launch_date_utc);
+                return launchDate >= cutoffDate;
+            }
+            return true;
+        });
+        setFilterData(filtered);
+        paginate(1);
+    };
+
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const getPaginatedData = () => {
@@ -54,10 +84,12 @@ const Context = ({ children }) => {
                 rocketData: getPaginatedData(),
                 filterDataBySearch,
                 filterDataByStatus,
+                filterDataByDate,
                 currentPage,
                 paginate,
                 totalPages,
                 selectedStatus,
+                selectedDate,
             }}
         >
             {children}
