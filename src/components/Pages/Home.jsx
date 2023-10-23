@@ -39,10 +39,6 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div>
-                    <h2>My name is: {values.length}</h2>
-                </div>
-
                 <ShowData></ShowData>
             {/* <AllData.Provider value={rocketData}>
                 {children}
